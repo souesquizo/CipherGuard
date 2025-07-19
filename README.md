@@ -1,28 +1,22 @@
---// CONFIG
-local teamCheck = true
-local espEnabled = false
-local superJumpEnabled = false
+local speedEnabled = false
+local jumpEnabled = false
+
+local walkSpeedAmount = 50
 local jumpPowerAmount = 150
 
---// UI
 local gui = Instance.new("ScreenGui", game:GetService("CoreGui"))
-gui.Name = "CipherGuardESP_UI"
+gui.Name = "CipherGuard_UI"
 
---// Fundo quadriculado (ImageLabel)
 local background = Instance.new("ImageLabel", gui)
 background.Size = UDim2.new(0, 240, 0, 160)
 background.Position = UDim2.new(0, 20, 0, 20)
-background.Image = "rbxassetid://2151741365" -- textura quadriculada leve
+background.Image = "rbxassetid://2151741365" -- textura quadriculada
 background.ImageTransparency = 0.3
 background.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 background.BackgroundTransparency = 0
 background.BorderSizePixel = 0
+Instance.new("UICorner", background).CornerRadius = UDim.new(0, 12)
 
--- Arredondamento
-local bgCorner = Instance.new("UICorner", background)
-bgCorner.CornerRadius = UDim.new(0, 12)
-
---// Título estilizado
 local title = Instance.new("TextLabel", background)
 title.Size = UDim2.new(1, 0, 0, 30)
 title.Position = UDim2.new(0, 0, 0, 0)
@@ -33,7 +27,6 @@ title.Font = Enum.Font.GothamBold
 title.TextSize = 20
 title.TextStrokeTransparency = 0.6
 
---// Descrição
 local desc = Instance.new("TextLabel", background)
 desc.Size = UDim2.new(1, -10, 0, 20)
 desc.Position = UDim2.new(0, 5, 0, 28)
@@ -45,110 +38,52 @@ desc.TextSize = 13
 desc.TextXAlignment = Enum.TextXAlignment.Left
 desc.TextStrokeTransparency = 0.8
 
---// Botão de ESP
-local toggleESP = Instance.new("TextButton", background)
-toggleESP.Size = UDim2.new(1, -20, 0, 35)
-toggleESP.Position = UDim2.new(0, 10, 0, 55)
-toggleESP.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-toggleESP.TextColor3 = Color3.fromRGB(255, 0, 0)
-toggleESP.Font = Enum.Font.GothamBold
-toggleESP.TextSize = 18
-toggleESP.Text = "ESP: OFF"
-toggleESP.BorderSizePixel = 0
-Instance.new("UICorner", toggleESP)
+local jumpBtn = Instance.new("TextButton", background)
+jumpBtn.Size = UDim2.new(1, -20, 0, 35)
+jumpBtn.Position = UDim2.new(0, 10, 0, 55)
+jumpBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+jumpBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+jumpBtn.Font = Enum.Font.GothamBold
+jumpBtn.TextSize = 18
+jumpBtn.Text = "Super Pulo: OFF"
+jumpBtn.BorderSizePixel = 0
+Instance.new("UICorner", jumpBtn)
 
---// Botão de Super Pulo
-local toggleJump = Instance.new("TextButton", background)
-toggleJump.Size = UDim2.new(1, -20, 0, 35)
-toggleJump.Position = UDim2.new(0, 10, 0, 95)
-toggleJump.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-toggleJump.TextColor3 = Color3.fromRGB(255, 0, 0)
-toggleJump.Font = Enum.Font.GothamBold
-toggleJump.TextSize = 18
-toggleJump.Text = "Super Pulo: OFF"
-toggleJump.BorderSizePixel = 0
-Instance.new("UICorner", toggleJump)
+local speedBtn = Instance.new("TextButton", background)
+speedBtn.Size = UDim2.new(1, -20, 0, 35)
+speedBtn.Position = UDim2.new(0, 10, 0, 95)
+speedBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+speedBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+speedBtn.Font = Enum.Font.GothamBold
+speedBtn.TextSize = 18
+speedBtn.Text = "Velocidade: OFF"
+speedBtn.BorderSizePixel = 0
+Instance.new("UICorner", speedBtn)
 
---// Função ESP
-function createESP(player)
-	if player == game.Players.LocalPlayer then return end
-	if teamCheck and player.Team == game.Players.LocalPlayer.Team then return end
-	if not player.Character or not player.Character:FindFirstChild("Head") then return end
-	if player.Character:FindFirstChild("CipherESP_GUI") then return end
+function updateStats()
+	local char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+	local humanoid = char:FindFirstChildOfClass("Humanoid")
+	if not humanoid then return end
 
-	local billboard = Instance.new("BillboardGui")
-	billboard.Name = "CipherESP_GUI"
-	billboard.Adornee = player.Character.Head
-	billboard.Size = UDim2.new(0, 100, 0, 40)
-	billboard.StudsOffset = Vector3.new(0, 2, 0)
-	billboard.AlwaysOnTop = true
-	billboard.Parent = player.Character
-
-	local frame = Instance.new("Frame", billboard)
-	frame.Size = UDim2.new(1, 0, 1, 0)
-	frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	frame.BackgroundTransparency = 0.3
-	frame.BorderSizePixel = 0
-
-	local label = Instance.new("TextLabel", billboard)
-	label.Size = UDim2.new(1, 0, 1, 0)
-	label.Text = player.Name
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.fromRGB(0, 0, 0)
-	label.TextStrokeTransparency = 0
-	label.TextSize = 14
-	label.Font = Enum.Font.GothamBold
+	humanoid.JumpPower = jumpEnabled and jumpPowerAmount or 50
+	humanoid.WalkSpeed = speedEnabled and walkSpeedAmount or 16
 end
 
-function enableESP()
-	for _, player in ipairs(game.Players:GetPlayers()) do
-		createESP(player)
-	end
-end
-
-function disableESP()
-	for _, player in ipairs(game.Players:GetPlayers()) do
-		if player.Character and player.Character:FindFirstChild("CipherESP_GUI") then
-			player.Character:FindFirstChild("CipherESP_GUI"):Destroy()
-		end
-	end
-end
-
---// Toggle ESP
-toggleESP.MouseButton1Click:Connect(function()
-	espEnabled = not espEnabled
-	if espEnabled then
-		toggleESP.Text = "ESP: ON"
-		toggleESP.TextColor3 = Color3.fromRGB(0, 255, 0)
-		enableESP()
-	else
-		toggleESP.Text = "ESP: OFF"
-		toggleESP.TextColor3 = Color3.fromRGB(255, 0, 0)
-		disableESP()
-	end
+jumpBtn.MouseButton1Click:Connect(function()
+	jumpEnabled = not jumpEnabled
+	updateStats()
+	jumpBtn.Text = jumpEnabled and "Super Pulo: ON" or "Super Pulo: OFF"
+	jumpBtn.TextColor3 = jumpEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
 end)
 
---// Toggle Super Jump
-toggleJump.MouseButton1Click:Connect(function()
-	superJumpEnabled = not superJumpEnabled
-	local human = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-	if superJumpEnabled then
-		if human then human.JumpPower = jumpPowerAmount end
-		toggleJump.Text = "Super Pulo: ON"
-		toggleJump.TextColor3 = Color3.fromRGB(0, 255, 0)
-	else
-		if human then human.JumpPower = 50 end
-		toggleJump.Text = "Super Pulo: OFF"
-		toggleJump.TextColor3 = Color3.fromRGB(255, 0, 0)
-	end
+speedBtn.MouseButton1Click:Connect(function()
+	speedEnabled = not speedEnabled
+	updateStats()
+	speedBtn.Text = speedEnabled and "Velocidade: ON" or "Velocidade: OFF"
+	speedBtn.TextColor3 = speedEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
 end)
 
---// Novos jogadores
-game.Players.PlayerAdded:Connect(function(player)
-	player.CharacterAdded:Connect(function()
-		wait(1)
-		if espEnabled then
-			createESP(player)
-		end
-	end)
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+	wait(1)
+	updateStats()
 end)
