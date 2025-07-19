@@ -60,6 +60,30 @@ speedBtn.Text = "Velocidade: OFF"
 speedBtn.BorderSizePixel = 0
 Instance.new("UICorner", speedBtn)
 
+-- Toggle button para abrir/fechar o painel
+local toggleBtn = Instance.new("TextButton", background)
+toggleBtn.Size = UDim2.new(0, 30, 0, 30)
+toggleBtn.Position = UDim2.new(1, -35, 0, 5)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleBtn.Font = Enum.Font.GothamBold
+toggleBtn.TextSize = 20
+toggleBtn.Text = "▲"
+toggleBtn.BorderSizePixel = 0
+Instance.new("UICorner", toggleBtn)
+
+local isOpen = true
+
+toggleBtn.MouseButton1Click:Connect(function()
+    isOpen = not isOpen
+    for _, child in pairs(background:GetChildren()) do
+        if child ~= toggleBtn then
+            child.Visible = isOpen
+        end
+    end
+    toggleBtn.Text = isOpen and "▲" or "▼"
+end)
+
 function updateStats()
 	local char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
 	local humanoid = char:FindFirstChildOfClass("Humanoid")
