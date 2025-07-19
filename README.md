@@ -61,9 +61,9 @@ speedBtn.BorderSizePixel = 0
 Instance.new("UICorner", speedBtn)
 
 -- Toggle button para abrir/fechar o painel
-local toggleBtn = Instance.new("TextButton", background)
+local toggleBtn = Instance.new("TextButton", gui)
 toggleBtn.Size = UDim2.new(0, 30, 0, 30)
-toggleBtn.Position = UDim2.new(1, -35, 0, 5)
+toggleBtn.Position = UDim2.new(0, 20 + 240 -35, 0, 20, + 5)
 toggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 toggleBtn.Font = Enum.Font.GothamBold
