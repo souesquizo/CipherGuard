@@ -1,7 +1,7 @@
 local speedEnabled = false
 local jumpEnabled = false
 
-local walkSpeedAmount = 50
+local walkSpeedAmount = 100
 local jumpPowerAmount = 150
 
 local gui = Instance.new("ScreenGui", game:GetService("CoreGui"))
@@ -10,7 +10,7 @@ gui.Name = "CipherGuard_UI"
 local background = Instance.new("ImageLabel", gui)
 background.Size = UDim2.new(0, 240, 0, 160)
 background.Position = UDim2.new(0, 20, 0, 20)
-background.Image = "rbxassetid://2151741365" -- textura quadriculada
+background.Image = "rbxassetid://2151741365" 
 background.ImageTransparency = 0.3
 background.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 background.BackgroundTransparency = 0
@@ -35,7 +35,7 @@ desc.Text = "testando essa bst de linguagem lua"
 desc.TextColor3 = Color3.fromRGB(200, 200, 200)
 desc.Font = Enum.Font.Gotham
 desc.TextSize = 13
-desc.TextXAlignment = Enum.TextXAlignment.Left
+desc.TextXAlignment = Enum.TextXAlignment.Center
 desc.TextStrokeTransparency = 0.8
 
 local jumpBtn = Instance.new("TextButton", background)
